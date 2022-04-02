@@ -52,5 +52,32 @@ namespace EmployeePayrollTest
             Assert.AreEqual("92000",employee.salary);
             Console.WriteLine(restResponse.Content);
         }
+        [TestMethod]
+        public void GivenCorrectLocalHostAndPOSTMethod_InRestRequestAddingListofEmployee_ShouldReturnListofEmployeesAddedRecently()
+        {
+            List<Employee> employeesListRetrievedFromJsonServer = new List<Employee>();
+            List<Employee> employeeListToBeadded = new List<Employee>();
+            employeeListToBeadded.Add(new Employee { name = "Pranav", salary = "85000" });
+            employeeListToBeadded.Add(new Employee { name = "TaranDeep", salary = "95000" });
+            employeeListToBeadded.Add(new Employee { name = "Vipul", salary = "75000" });
+            employeeListToBeadded.Add(new Employee { name = "Vipul", salary = "65000" });
+            employeeListToBeadded.Add(new Employee { name = "Deepak", salary = "95000" });
+            foreach (Employee emp in employeeListToBeadded)
+            {
+                //Arrange
+                RestRequest restRequest = new RestRequest("/posts", Method.POST);
+                //Act
+                JObject jobjBody = new JObject();
+                jobjBody.Add("name", emp.name);
+                jobjBody.Add("salary", emp.salary);
+                restRequest.AddParameter("application/json", jobjBody, ParameterType.RequestBody);
+                IRestResponse restResponse = restClient.Execute(restRequest);
+                //Assert
+                Assert.AreEqual(restResponse.StatusCode, HttpStatusCode.Created);
+                Employee employee = JsonConvert.DeserializeObject<Employee>(restResponse.Content);
+                employeesListRetrievedFromJsonServer.Add(employee);
+            }
+            Assert.AreEqual(employeeListToBeadded.Count, employeesListRetrievedFromJsonServer.Count);
+        }
     }
 }
