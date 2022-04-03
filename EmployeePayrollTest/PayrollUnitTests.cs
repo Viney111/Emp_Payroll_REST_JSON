@@ -82,12 +82,15 @@ namespace EmployeePayrollTest
         [TestMethod]
         public void GivenCorrectLocalHostAndEmployeeID_InRestRequestUpdatingListofEmployee_ShouldReturnupdatedListofEmployeesAddedRecently()
         {
+            //Arrange
             RestRequest restRequest = new RestRequest("/posts/1", Method.PUT);
             JObject jsonBody = new JObject();
             jsonBody.Add("name", "viney");
             jsonBody.Add("salary", "78000");
+            //Act
             restRequest.AddOrUpdateParameter("application/json", jsonBody, ParameterType.RequestBody);
             IRestResponse restResponse = restClient.Execute(restRequest);
+            //Assert
             Assert.AreEqual(restResponse.StatusCode, HttpStatusCode.OK);
             Employee employee = JsonConvert.DeserializeObject<Employee>(restResponse.Content);
             Assert.AreEqual("78000", employee.salary);
