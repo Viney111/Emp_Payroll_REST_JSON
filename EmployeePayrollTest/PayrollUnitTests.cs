@@ -95,5 +95,15 @@ namespace EmployeePayrollTest
             Employee employee = JsonConvert.DeserializeObject<Employee>(restResponse.Content);
             Assert.AreEqual("78000", employee.salary);
         }
+        [TestMethod]
+        public void GivenCorrectLocalHostAndEmployeeID_InRestRequestDeleteListofEmployee_ShouldReturnListofEmployeesDeletedRecently()
+        {
+            //Arrange
+            RestRequest restRequest = new RestRequest("/posts/1", Method.DELETE);
+            //Act
+            IRestResponse restResponse = restClient.Execute(restRequest);
+            //Assert
+            Assert.AreEqual(restResponse.StatusCode, HttpStatusCode.OK);
+        }
     }
 }
