@@ -38,18 +38,18 @@ namespace EmployeePayrollTest
         public void GivenCorrectLocalHostAndPOSTMethod_InRestRequest_ShouldReturnListofEmployeesAddedRecently()
         {
             //Arrange
-            RestRequest restRequest = new RestRequest("/posts",Method.POST);
+            RestRequest restRequest = new RestRequest("/posts", Method.POST);
             JObject jobjBody = new JObject();
             jobjBody.Add("name", "bhushan");
             jobjBody.Add("salary", "92000");
-            restRequest.AddParameter("application/json",jobjBody,ParameterType.RequestBody);
+            restRequest.AddParameter("application/json", jobjBody, ParameterType.RequestBody);
             //Act
             IRestResponse restResponse = restClient.Execute(restRequest);
             //Assert
             Assert.AreEqual(restResponse.StatusCode, HttpStatusCode.Created);
             Employee employee = JsonConvert.DeserializeObject<Employee>(restResponse.Content);
-            Assert.AreEqual("bhushan",employee.name);
-            Assert.AreEqual("92000",employee.salary);
+            Assert.AreEqual("bhushan", employee.name);
+            Assert.AreEqual("92000", employee.salary);
             Console.WriteLine(restResponse.Content);
         }
         [TestMethod]
@@ -78,6 +78,19 @@ namespace EmployeePayrollTest
                 employeesListRetrievedFromJsonServer.Add(employee);
             }
             Assert.AreEqual(employeeListToBeadded.Count, employeesListRetrievedFromJsonServer.Count);
+        }
+        [TestMethod]
+        public void GivenCorrectLocalHostAndEmployeeID_InRestRequestUpdatingListofEmployee_ShouldReturnupdatedListofEmployeesAddedRecently()
+        {
+            RestRequest restRequest = new RestRequest("/posts/1", Method.PUT);
+            JObject jsonBody = new JObject();
+            jsonBody.Add("name", "viney");
+            jsonBody.Add("salary", "78000");
+            restRequest.AddOrUpdateParameter("application/json", jsonBody, ParameterType.RequestBody);
+            IRestResponse restResponse = restClient.Execute(restRequest);
+            Assert.AreEqual(restResponse.StatusCode, HttpStatusCode.OK);
+            Employee employee = JsonConvert.DeserializeObject<Employee>(restResponse.Content);
+            Assert.AreEqual("78000", employee.salary);
         }
     }
 }
